@@ -41,12 +41,14 @@ export const openApiSpec: JsonObject = {
       '',
       'All registered accounts have the USER role. Product and category catalog endpoints are read-only; product creation is an internal backend operation and is not exposed over HTTP.',
       '',
-      'All successful JSON responses use a `{ "data": ... }` envelope except for `/health`. Errors use `{ "error": { "code": "...", "message": "..." } }`.'
+      'All successful JSON responses use a `{ "data": ... }` envelope. Errors use `{ "error": { "code": "...", "message": "..." } }`.'
     ].join('\n')
   },
-  servers: [{ url: '/api', description: 'This API server' }],
+  servers: [
+    { url: 'https://e-commerce-ovfh.onrender.com/api', description: 'Hosted API' },
+    { url: 'http://localhost:3000/api', description: 'Local development API' }
+  ],
   tags: [
-    { name: 'Health' },
     {
       name: 'Authentication',
       description: [
@@ -69,19 +71,6 @@ export const openApiSpec: JsonObject = {
   ],
   security: [],
   paths: {
-    '/health': {
-      get: {
-        tags: ['Health'],
-        summary: 'Check API and database health',
-        responses: {
-          200: {
-            description: 'The API can reach the database',
-            content: { 'application/json': { schema: ref('Health') } }
-          },
-          500: error('The database health check failed')
-        }
-      }
-    },
     '/auth/signup': {
       post: {
         tags: ['Authentication'],
@@ -545,11 +534,6 @@ export const openApiSpec: JsonObject = {
             }
           }
         }
-      },
-      Health: {
-        type: 'object',
-        required: ['status'],
-        properties: { status: { type: 'string', enum: ['ok'] } }
       },
       Message: {
         type: 'object',

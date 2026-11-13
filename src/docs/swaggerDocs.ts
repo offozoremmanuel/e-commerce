@@ -66,7 +66,6 @@ export const openApiSpec: JsonObject = {
     { name: 'Categories' },
     { name: 'Cart' },
     { name: 'Orders' },
-    { name: 'Payments' },
     { name: 'Reviews' }
   ],
   security: [],
@@ -414,44 +413,6 @@ export const openApiSpec: JsonObject = {
         }
       }
     },
-    '/payments/orders/{orderId}/initialize': {
-      post: {
-        tags: ['Payments'],
-        summary: 'Initialize payment for an order',
-        description: 'Creates a pending payment for the signed-in user’s pending order. Repeated requests return the existing payment.',
-        security: [{ bearerAuth: [] }],
-        parameters: [uuidParameter('orderId', 'Order ID')],
-        responses: {
-          200: success(ref('Payment'), 'Existing payment returned'),
-          201: success(ref('Payment'), 'Payment initialized'),
-          400: error('Order ID must be a UUID'),
-          401: authResponses[401],
-          404: error('Order was not found'),
-          409: error('Order is not available for payment'),
-          500: error('Unexpected server error')
-        }
-      }
-    },
-    '/payments/{reference}': {
-      get: {
-        tags: ['Payments'],
-        summary: 'Get payment status',
-        security: [{ bearerAuth: [] }],
-        parameters: [{
-          name: 'reference',
-          in: 'path',
-          required: true,
-          schema: { type: 'string', minLength: 1 }
-        }],
-        responses: {
-          200: success(ref('PaymentWithOrder')),
-          400: error('Payment reference is required'),
-          401: authResponses[401],
-          404: error('Payment was not found'),
-          500: error('Unexpected server error')
-        }
-      }
-    },
     '/reviews/products/{productId}': {
       get: {
         tags: ['Reviews'],
@@ -776,12 +737,6 @@ export const openApiSpec: JsonObject = {
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' }
         }
-      },
-      PaymentWithOrder: {
-        allOf: [
-          ref('Payment'),
-          { type: 'object', properties: { order: { type: 'object', properties: { id: { type: 'string', format: 'uuid' }, status: { type: 'string' } } } } }
-        ]
       },
       Review: {
         type: 'object',

@@ -14,7 +14,6 @@ import { productRoutes } from './routes/product.routes.js';
 import { categoryRoutes } from './routes/category.routes.js';
 import { cartRoutes } from './routes/cart.routes.js';
 import { orderRoutes } from './routes/order.routes.js';
-import { paymentRoutes } from './routes/payment.routes.js';
 import { reviewRoutes } from './routes/review.routes.js';
 
 export const app = express();
@@ -26,7 +25,6 @@ apiRouter.use('/products', productRoutes);
 apiRouter.use('/categories', categoryRoutes);
 apiRouter.use('/cart', cartRoutes);
 apiRouter.use('/orders', orderRoutes);
-apiRouter.use('/payments', paymentRoutes);
 apiRouter.use('/reviews', reviewRoutes);
 apiRouter.get('/health', async (_req, res, next) => {
   try {
